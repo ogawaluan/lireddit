@@ -1,17 +1,17 @@
 import "reflect-metadata";
-import { MikroORM } from "@mikro-orm/core";
-import { __prod__ } from "./constants";
 import microConfig from "./mikro-orm.config";
 import express from "express";
+import session from "express-session";
+import cors from "cors";
+import redis from "redis";
+import connectRedis from "connect-redis";
+import { MikroORM } from "@mikro-orm/core";
+import { COOKIE_NAME, __prod__ } from "./constants";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { HelloResolver } from "./resolvers/hello";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
-import redis from "redis";
-import session from "express-session";
-import connectRedis from "connect-redis";
-import cors from "cors";
 
 const main = async () => {
     const orm = await MikroORM.init(microConfig);
@@ -30,7 +30,7 @@ const main = async () => {
 
     app.use(
     session({
-        name: "qid",
+        name: COOKIE_NAME,
         store: new RedisStore({ 
             client: redisClient,
             disableTouch: true,
